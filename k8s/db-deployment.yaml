@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: mysql:5.7
+        env:
+        - name: MYSQL_DATABASE
+          value: userdb
+        - name: MYSQL_USER
+          value: lampuser
+        - name: MYSQL_PASSWORD
+          value: password123
+        - name: MYSQL_ROOT_PASSWORD
+          value: rootpass
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: db-storage
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: db-pvc
